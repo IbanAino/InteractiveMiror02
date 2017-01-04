@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,11 +27,15 @@ namespace miroir04
         Button button;
         WarningLight warningLight;
         EmotionApi emotionApi;
+
+        bool checkBoxState;
         
         //CONSTUCTOR
         public MainPage()
         {
             this.InitializeComponent();
+
+            checkBoxState = false;
 
             button = new Button();
             warningLight = new WarningLight();
@@ -46,9 +51,20 @@ namespace miroir04
 
 
         //EVENTS LISTENED AND EXECUTED
-        private void OnButtonPressed(object source, EventArgs e)
+        private async void OnButtonPressed(object source, EventArgs e)
         {
-
+            if (checkBoxState == false)
+            {
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { checkBoxStatePhysicalButton.SetValue(CheckBox.IsCheckedProperty, true); });
+                checkBoxState = true;
+            }
+            else
+            {
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { checkBoxStatePhysicalButton.SetValue(CheckBox.IsCheckedProperty, false); });
+                checkBoxState = false;
+            }
         }
     }
 }
