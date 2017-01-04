@@ -32,6 +32,7 @@ namespace miroir04
         bool checkBoxState;
         ThreadPoolTimer clockTimer = null;
         int timeCount;
+        DateTime dateTime;
 
         //CONSTUCTOR
         public MainPage()
@@ -41,6 +42,7 @@ namespace miroir04
             checkBoxState = false;
             clockTimer = ThreadPoolTimer.CreatePeriodicTimer(clockTimer_Tick, TimeSpan.FromMilliseconds(1000));
             timeCount = 0;
+            dateTime = DateTime.Now;
 
             button = new Button();
             warningLight = new WarningLight();
@@ -54,8 +56,11 @@ namespace miroir04
         //METHODS
         private async void clockTimer_Tick(ThreadPoolTimer timer)
         {
+            dateTime = dateTime.AddSeconds(1);
+            timeCount++;
+
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { textBlockTime.Text = timeCount++.ToString(); });   
+                () => { textBlockTime.Text = dateTime.ToString() + "  timecount : " + timeCount.ToString(); });
         }
 
 
