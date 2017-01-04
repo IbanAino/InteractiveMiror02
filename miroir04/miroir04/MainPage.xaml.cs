@@ -22,17 +22,31 @@ namespace miroir04
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        //ATTRIBUTS
+        Button button;
+        WarningLight warningLight;
+        EmotionApi emotionApi;
+        
+        //CONSTUCTOR
         public MainPage()
         {
             this.InitializeComponent();
+
+            button = new Button();
+            warningLight = new WarningLight();
+            emotionApi = new EmotionApi();
+
+            //subscription of classes to events
+            button.buttonPressed += this.OnButtonPressed;
+            button.buttonPressed += warningLight.OnButtonPressed;
         }
 
-        private void textBlock_SelectionChanged(object sender, RoutedEventArgs e)
-        {
+        //METHODS
 
-        }
 
-        private void radioButton_Checked(object sender, RoutedEventArgs e)
+
+        //EVENTS LISTENED AND EXECUTED
+        private void OnButtonPressed(object source, EventArgs e)
         {
 
         }
