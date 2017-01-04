@@ -26,5 +26,15 @@ namespace miroir04
         {
             this.InitializeComponent();
         }
+
+        private void textBlock_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void radioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
