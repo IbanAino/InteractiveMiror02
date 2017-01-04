@@ -53,6 +53,7 @@ namespace miroir04
         //EVENTS LISTENED AND EXECUTED
         private async void OnButtonPressed(object source, EventArgs e)
         {
+            // show the physical button's state on screen
             if (checkBoxState == false)
             {
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
@@ -65,6 +66,12 @@ namespace miroir04
                     () => { checkBoxStatePhysicalButton.SetValue(CheckBox.IsCheckedProperty, false); });
                 checkBoxState = false;
             }
+
+            //ask EmotionApi
+            //textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte");
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                async () =>
+                { textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte"); });           
         }
     }
 }
