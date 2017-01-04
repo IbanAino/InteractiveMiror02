@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -29,13 +30,17 @@ namespace miroir04
         EmotionApi emotionApi;
 
         bool checkBoxState;
-        
+        ThreadPoolTimer clockTimer = null;
+        int timeCount;
+
         //CONSTUCTOR
         public MainPage()
         {
             this.InitializeComponent();
 
             checkBoxState = false;
+            clockTimer = ThreadPoolTimer.CreatePeriodicTimer(clockTimer_Tick, TimeSpan.FromMilliseconds(1000));
+            timeCount = 0;
 
             button = new Button();
             warningLight = new WarningLight();
@@ -47,7 +52,11 @@ namespace miroir04
         }
 
         //METHODS
-
+        private async void clockTimer_Tick(ThreadPoolTimer timer)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => { textBlockTime.Text = timeCount++.ToString(); });   
+        }
 
 
         //EVENTS LISTENED AND EXECUTED
