@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
+using Windows.Media.MediaProperties;
 using Windows.Storage;
 
 namespace miroir04
@@ -20,10 +21,7 @@ namespace miroir04
         //CONSTRUCTOR
         public Webcam()
         {
-            /*new Action(async () =>
-            {
-                data = await initWebcam();
-            }).Invoke();*/
+
         }
 
         //METHODS
@@ -51,5 +49,17 @@ namespace miroir04
             return datas;
         }
 
+        public async Task<string> TakePicture()
+        {
+            //photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
+             //   PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+            //ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
+            //await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
+
+            //string statutText = "Take Photo succeeded: " + photoFile.Path;
+
+            //return statutText;
+            return "Charlotte";
+        }
     }
 }

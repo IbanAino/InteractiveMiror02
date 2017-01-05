@@ -62,9 +62,6 @@ namespace miroir04
             {
                 textBlockInitWebcam.Text = await webcam.initWebcam();
             }).Invoke();
-
-            
-
         }
 
         //METHODS
@@ -98,6 +95,10 @@ namespace miroir04
             //ask EmotionApi
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte"); });
+
+            //take a picture
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                async () => { textBlockInitWebcam.Text += " " + await webcam.TakePicture(); });
         }
     }
 }
