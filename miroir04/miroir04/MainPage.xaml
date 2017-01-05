@@ -20,6 +20,6 @@
         <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="208" Margin="939,66,0,0" Stroke="Black" StrokeThickness="2" VerticalAlignment="Top" Width="714"/>
         <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="984,124,0,0" TextWrapping="Wrap" Text="Time :" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlockTime" HorizontalAlignment="Left" Margin="984,167,0,0" TextWrapping="Wrap" Text="00h00" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textBlockInitWebcam" HorizontalAlignment="Left" Margin="188,398,0,0" TextWrapping="Wrap" Text="Webcam non initialisée." VerticalAlignment="Top" Height="43" Width="197"/>
+        <TextBlock x:Name="textBlockInitWebcam" HorizontalAlignment="Left" Margin="188,398,0,0" TextWrapping="Wrap" Text="Webcam non initialisée." VerticalAlignment="Top" Height="43" Width="648"/>
     </Grid>
 </Page>

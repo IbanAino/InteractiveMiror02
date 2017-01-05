@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace miroir04
 {
@@ -18,6 +19,8 @@ namespace miroir04
         private StorageFile photoFile;
         private readonly string PHOTO_FILE_NAME = "photo.jpg";
 
+        Windows.Media.Capture.MediaCapture captureManager;
+
         //CONSTRUCTOR
         public Webcam()
         {
@@ -27,8 +30,6 @@ namespace miroir04
         //METHODS
         public async Task<string> initWebcam()
         {
-            string datas;
-
             try
             {
                 if (mediaCapture != null)
@@ -39,27 +40,61 @@ namespace miroir04
 
                 mediaCapture = new MediaCapture();
                 await mediaCapture.InitializeAsync();
-                datas = "Initialisation de la webcam ok";
+
+                return "Initialisation de la webcam ok";
             }
             catch
             {
-                datas = "initialisation pas ok - erreur relevee";
+                return "initialisation webcam pas du tout ok, mais alors pas du tout - erreur relevee";
             }
-
-            return datas;
         }
 
         public async Task<string> TakePicture()
         {
             photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
                 PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
-            //ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
-            //await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
+            ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
 
+            // create storage file in local app storage
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(
+                "TestPhoto.jpg",
+                CreationCollisionOption.GenerateUniqueName);
+
+            try
+            {
+                await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, file);
+                BitmapImage bmpImage = new BitmapImage(new Uri(file.Path));
+
+                return "photo correctly taken at : " + photoFile.Path;
+            }
+            catch
+            {
+                return "ERROR";
+            }
             //string statutText = "Take Photo succeeded: " + photoFile.Path;
 
             //return statutText;
-            return "Charlotte";
+
+
+
+            //await mediaCapture.StartPreviewAsync();
+
+
+           // ImageEncodingProperties imgFormat = ImageEncodingProperties.CreateJpeg();
+
+            // create storage file in local app storage
+            /*StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(
+                "TestPhoto.jpg",
+                CreationCollisionOption.GenerateUniqueName);*/
+
+            // take photo
+          //  await mediaCapture.CapturePhotoToStorageFileAsync(imgFormat, file);
+
+            // Get photo as a BitmapImage
+         //   BitmapImage bmpImage = new BitmapImage(new Uri(file.Path));
+
+            // imagePreivew is a <Image> object defined in XAML
+            //imagePreivew.Source = bmpImage;
         }
     }
 }
