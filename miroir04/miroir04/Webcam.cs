@@ -51,8 +51,8 @@ namespace miroir04
 
         public async Task<string> TakePicture()
         {
-            //photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
-             //   PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
+                PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
             //ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
             //await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
 
