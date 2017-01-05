@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Capture;
+using Windows.Storage;
 using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -28,6 +31,7 @@ namespace miroir04
         Button button;
         WarningLight warningLight;
         EmotionApi emotionApi;
+        Webcam webcam;
 
         bool checkBoxState;
         ThreadPoolTimer clockTimer = null;
@@ -47,10 +51,20 @@ namespace miroir04
             button = new Button();
             warningLight = new WarningLight();
             emotionApi = new EmotionApi();
+            webcam = new Webcam();
 
             //subscription of classes to events
             button.buttonPressed += this.OnButtonPressed;
             button.buttonPressed += warningLight.OnButtonPressed;
+
+            // initialisation of the webcam
+            new Action(async () =>
+            {
+                textBlockInitWebcam.Text = await webcam.initWebcam();
+            }).Invoke();
+
+            
+
         }
 
         //METHODS
@@ -63,8 +77,8 @@ namespace miroir04
                 () => { textBlockTime.Text = dateTime.ToString() + "  timecount : " + timeCount.ToString(); });
         }
 
-
         //EVENTS LISTENED AND EXECUTED
+        //physical button pressed
         private async void OnButtonPressed(object source, EventArgs e)
         {
             // show the physical button's state on screen
@@ -82,10 +96,8 @@ namespace miroir04
             }
 
             //ask EmotionApi
-            //textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte");
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                async () =>
-                { textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte"); });           
+                async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte"); });
         }
     }
 }
