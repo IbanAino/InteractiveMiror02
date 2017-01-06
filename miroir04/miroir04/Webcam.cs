@@ -45,7 +45,7 @@ namespace miroir04
             }
             catch
             {
-                return "initialisation webcam pas du tout ok, mais alors pas du tout - erreur relevee";
+                return "initialisation webcam failed - erreur relevee";
             }
         }
 
@@ -65,36 +65,12 @@ namespace miroir04
                 await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, file);
                 BitmapImage bmpImage = new BitmapImage(new Uri(file.Path));
 
-                return "photo correctly taken at : " + photoFile.Path;
+                return " - photo prise, et enregistrée à : " + photoFile.Path;
             }
             catch
             {
-                return "ERROR";
+                return "ERROR : photo non prise";
             }
-            //string statutText = "Take Photo succeeded: " + photoFile.Path;
-
-            //return statutText;
-
-
-
-            //await mediaCapture.StartPreviewAsync();
-
-
-           // ImageEncodingProperties imgFormat = ImageEncodingProperties.CreateJpeg();
-
-            // create storage file in local app storage
-            /*StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(
-                "TestPhoto.jpg",
-                CreationCollisionOption.GenerateUniqueName);*/
-
-            // take photo
-          //  await mediaCapture.CapturePhotoToStorageFileAsync(imgFormat, file);
-
-            // Get photo as a BitmapImage
-         //   BitmapImage bmpImage = new BitmapImage(new Uri(file.Path));
-
-            // imagePreivew is a <Image> object defined in XAML
-            //imagePreivew.Source = bmpImage;
         }
     }
 }
