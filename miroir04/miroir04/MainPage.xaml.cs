@@ -94,6 +94,22 @@ namespace miroir04
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     () => { checkBoxStatePhysicalButton.SetValue(CheckBox.IsCheckedProperty, true); });
                 checkBoxState = true;
+
+                //ask EmotionApi
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte"); });
+
+
+                await initWebcam();
+                /*
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    async () => { textBlockInitWebcam.Text += " " + await initWebcam(); });
+                    */
+                
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    async () => { textBlockInitWebcam.Text += " " + await TakePicture(); });
+
+                //String b = await TakePicture();
             }
             else
             {
@@ -103,9 +119,7 @@ namespace miroir04
             }
 
             
-            //ask EmotionApi
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte"); });
+
 
             //take a picture
             /*
@@ -116,6 +130,7 @@ namespace miroir04
         }
 
         //WEBCAM
+        //called with buttons
         private async void initVideo_Click(object sender, RoutedEventArgs e)
         {
             //Video and Audio is initialized by default  
@@ -135,6 +150,32 @@ namespace miroir04
             BitmapImage bitmap = new BitmapImage();
             bitmap.SetSource(photoStream);
             captureImage.Source = bitmap;
+        }
+
+        //called with functions
+        public async Task<string> initWebcam()
+        {
+            //Video and Audio is initialized by default  
+            mediaCapture = new MediaCapture();
+            await mediaCapture.InitializeAsync();
+
+            return "webcam initialized";
+        }
+
+        public async Task<string> TakePicture()
+        {
+            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
+                            PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+            ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
+
+            await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
+
+            IRandomAccessStream photoStream = await photoFile.OpenReadAsync();
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.SetSource(photoStream);
+            captureImage.Source = bitmap;
+
+            return "photo taken";
         }
     }
 }
