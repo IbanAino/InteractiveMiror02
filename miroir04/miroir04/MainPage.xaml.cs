@@ -6,6 +6,10 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Capture;
+using Windows.Media.MediaProperties;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -37,6 +41,11 @@ namespace miroir04
         int timeCount;
         DateTime dateTime;
 
+        //webcam attributs
+        MediaCapture mediaCapture;
+        private IStorageFile photoFile;
+        private string PHOTO_FILE_NAME = "phpto.jpeg";
+
         //CONSTUCTOR
         public MainPage()
         {
@@ -57,10 +66,12 @@ namespace miroir04
             button.buttonPressed += warningLight.OnButtonPressed;
 
             // initialisation of the webcam
+            /*            
             new Action(async () =>
             {
                 textBlockInitWebcam.Text = await webcam.initWebcam();
             }).Invoke();
+            */
         }
 
         //METHODS
@@ -91,13 +102,39 @@ namespace miroir04
                 checkBoxState = false;
             }
 
+            
             //ask EmotionApi
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte"); });
 
             //take a picture
+            /*
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 async () => { textBlockInitWebcam.Text += " " + await webcam.TakePicture(); });
+            */
+
+        }
+
+        //WEBCAM
+        private async void initVideo_Click(object sender, RoutedEventArgs e)
+        {
+            //Video and Audio is initialized by default  
+            mediaCapture = new MediaCapture();
+            await mediaCapture.InitializeAsync();
+        }
+
+        private async void takePhoto_Click(object sender, RoutedEventArgs e)
+        {
+            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
+                            PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+            ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
+
+            await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
+
+            IRandomAccessStream photoStream = await photoFile.OpenReadAsync();
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.SetSource(photoStream);
+            captureImage.Source = bitmap;
         }
     }
 }

@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Graphics.Imaging;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
+
 
 namespace miroir04
 {
     class Webcam
     {
         //ATTRIBUTS
-        public string data { get; set; }
+        MediaCapture mediaCapture;
+        private IStorageFile photoFile;
+        private string PHOTO_FILE_NAME = "phpto.jpeg";
 
-        private MediaCapture mediaCapture;
-        private StorageFile photoFile;
-        private readonly string PHOTO_FILE_NAME = "photo.jpg";
-
-        Windows.Media.Capture.MediaCapture captureManager;
 
         //CONSTRUCTOR
         public Webcam()
@@ -28,49 +31,37 @@ namespace miroir04
         }
 
         //METHODS
+        
         public async Task<string> initWebcam()
         {
-            try
-            {
-                if (mediaCapture != null)
-                {
-                    mediaCapture.Dispose();
-                    mediaCapture = null;
-                }
+            //Video and Audio is initialized by default  
+            mediaCapture = new MediaCapture();
+            await mediaCapture.InitializeAsync();
 
-                mediaCapture = new MediaCapture();
-                await mediaCapture.InitializeAsync();
-
-                return "Initialisation de la webcam ok";
-            }
-            catch
-            {
-                return "initialisation webcam failed - erreur relevee";
-            }
+            return "webcam initialized";
         }
 
+        /*
         public async Task<string> TakePicture()
         {
             photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
-                PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+                            PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
             ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
 
-            // create storage file in local app storage
-            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(
-                "TestPhoto.jpg",
-                CreationCollisionOption.GenerateUniqueName);
+            //await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
 
-            try
-            {
-                await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, file);
-                BitmapImage bmpImage = new BitmapImage(new Uri(file.Path));
+            
+            IRandomAccessStream photoStream = await photoFile.OpenReadAsync();
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.SetSource(photoStream);
+            
+            //captureImage.Source = bitmap;
 
-                return " - photo prise, et enregistrée à : " + photoFile.Path;
-            }
-            catch
-            {
-                return "ERROR : photo non prise";
-            }
+            return "Photo prise";
         }
+        */
+
+
+
     }
 }

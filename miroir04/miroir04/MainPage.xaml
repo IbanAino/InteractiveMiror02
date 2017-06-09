@@ -21,5 +21,17 @@
         <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="984,124,0,0" TextWrapping="Wrap" Text="Time :" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlockTime" HorizontalAlignment="Left" Margin="984,167,0,0" TextWrapping="Wrap" Text="00h00" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlockInitWebcam" HorizontalAlignment="Left" Margin="188,398,0,0" TextWrapping="Wrap" Text="Webcam non initialisée." VerticalAlignment="Top" Height="43" Width="648"/>
+        
+        <Canvas Name="PreviewCanvas" Grid.Row="1" Grid.Column="0" Width="320" Height="320" Background="Gray"  Margin="0,0,0,0" Visibility="Visible">
+            <CaptureElement x:Name="previewElement" Width="320" Height="320" HorizontalAlignment="Left" Visibility="Visible"/>
+        </Canvas>
+
+        <Canvas Name="PhotoCanvas" Grid.Row="1" Grid.Column="1" Width="320" Height="320" Background="Gray"  Margin="40,0,0,0" Visibility="Visible">
+            <Image x:Name="captureImage" Width="320" Height="320" Visibility="Visible"/>
+        </Canvas>
+        
+        <Button x:Name="button1" Content="initialiser video" Click="initVideo_Click" HorizontalAlignment="Left" Margin="147,848,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="button2" Content="prendre photo" Click="takePhoto_Click" HorizontalAlignment="Left" Margin="304,848,0,0" VerticalAlignment="Top"/>
+
     </Grid>
 </Page>

@@ -20,7 +20,6 @@ namespace miroir04
         }
 
         //METHODS
-
         public async Task<string> MakeRequest(string filePath)
         {
             StorageFile photo = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/portrait.jpeg"));
