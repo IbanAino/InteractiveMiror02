@@ -101,33 +101,18 @@ namespace miroir04
                 await initWebcam();
 
                 String filePath = null;
-
+                
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     async () => {
-                        filePath = await TakePicture();
+                        filePath = await TakePictureBitmap();
                         textBlockInitWebcam.Text += filePath;
                     });
-                
+
                 //ask EmotionApi
+                await Task.Delay(10000);
 
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequestBitmap(filePath); });
-  
-
-                //await initWebcam();
-                /*
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    async () => { textBlockInitWebcam.Text += " " + await initWebcam(); });
-                    */
-                /*
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    async () => { textBlockInitWebcam.Text += " " + await TakePicture(); });
-                */
-                /*
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    async () => { await TakePictureBitmap(); });
-                    */
-
             }
             else
             {
@@ -196,24 +181,36 @@ namespace miroir04
             return photoFile.Path;
         }
 
-        /*
-        // function who return a bitmap
-        public async Task<IStorageFile> TakePictureBitmap()
+        
+        // function 2
+        public async Task<String> TakePictureBitmap()
         {
-            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
-                            PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
-            ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
+            //delete the previus file
+            //StorageFile fDelete = await ApplicationData.Current.LocalFolder.GetFileAsync(PHOTO_FILE_NAME);
+            //await fDelete.DeleteAsync();
 
+            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
+                            PHOTO_FILE_NAME, CreationCollisionOption.ReplaceExisting);
+                            //PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+            ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
             await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
 
-            IRandomAccessStream photoStream = await photoFile.OpenReadAsync();
+
+
+            StorageFile photo2 = await KnownFolders.PicturesLibrary.GetFileAsync("photo.jpeg");
+
+            
+            IRandomAccessStream photoStream = await photo2.OpenReadAsync();
             BitmapImage bitmap = new BitmapImage();
-            //bitmap.SetSource(photoStream);
-            bitmap.UriSource = new Uri(@"C:/Users/Public/photo.jpeg");
+            bitmap.SetSource(photoStream);
             captureImage.Source = bitmap;
 
-            return photoFile;
+            photoStream.Dispose();
+            
+
+            //return photoFile.Path;
+            return "photo prise";
         }
-        */
+        
     }
 }
