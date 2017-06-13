@@ -44,7 +44,7 @@ namespace miroir04
         //webcam attributs
         MediaCapture mediaCapture;
         private IStorageFile photoFile;
-        private string PHOTO_FILE_NAME = "phpto.jpeg";
+        private string PHOTO_FILE_NAME = "photo.jpeg";
 
         //CONSTUCTOR
         public MainPage()
@@ -91,25 +91,43 @@ namespace miroir04
             // show the physical button's state on screen
             if (checkBoxState == false)
             {
+                // check the checkBox on the screen
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     () => { checkBoxStatePhysicalButton.SetValue(CheckBox.IsCheckedProperty, true); });
                 checkBoxState = true;
 
-                //ask EmotionApi
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequest("Charlotte"); });
 
-
+                //take a picture
                 await initWebcam();
+
+                String filePath = null;
+
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    async () => {
+                        filePath = await TakePicture();
+                        textBlockInitWebcam.Text += filePath;
+                    });
+                
+                //ask EmotionApi
+
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequestBitmap(filePath); });
+  
+
+                //await initWebcam();
                 /*
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     async () => { textBlockInitWebcam.Text += " " + await initWebcam(); });
                     */
-                
+                /*
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     async () => { textBlockInitWebcam.Text += " " + await TakePicture(); });
+                */
+                /*
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    async () => { await TakePictureBitmap(); });
+                    */
 
-                //String b = await TakePicture();
             }
             else
             {
@@ -175,7 +193,27 @@ namespace miroir04
             bitmap.SetSource(photoStream);
             captureImage.Source = bitmap;
 
-            return "photo taken";
+            return photoFile.Path;
         }
+
+        /*
+        // function who return a bitmap
+        public async Task<IStorageFile> TakePictureBitmap()
+        {
+            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
+                            PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+            ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
+
+            await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
+
+            IRandomAccessStream photoStream = await photoFile.OpenReadAsync();
+            BitmapImage bitmap = new BitmapImage();
+            //bitmap.SetSource(photoStream);
+            bitmap.UriSource = new Uri(@"C:/Users/Public/photo.jpeg");
+            captureImage.Source = bitmap;
+
+            return photoFile;
+        }
+        */
     }
 }
