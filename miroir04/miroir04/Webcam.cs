@@ -19,49 +19,43 @@ namespace miroir04
     class Webcam
     {
         //ATTRIBUTS
+        bool webcamInitialized = false;
         MediaCapture mediaCapture;
-        private IStorageFile photoFile;
-        private string PHOTO_FILE_NAME = "phpto.jpeg";
-
 
         //CONSTRUCTOR
         public Webcam()
         {
-
+            initWebcam();
         }
 
         //METHODS
-        
         public async Task<string> initWebcam()
         {
             //Video and Audio is initialized by default  
             mediaCapture = new MediaCapture();
             await mediaCapture.InitializeAsync();
+            webcamInitialized = true;
 
             return "webcam initialized";
         }
 
-        /*
-        public async Task<string> TakePicture()
+        public async Task<String> TakePicture()
         {
-            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
-                            PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+            IStorageFile photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
+                "photo.jpeg", CreationCollisionOption.ReplaceExisting);
             ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
+            await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
 
-            //await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
-
-            
-            IRandomAccessStream photoStream = await photoFile.OpenReadAsync();
+            /*
+            StorageFile photo2 = await KnownFolders.PicturesLibrary.GetFileAsync("photo.jpeg");
+            IRandomAccessStream photoStream = await photo2.OpenReadAsync();
             BitmapImage bitmap = new BitmapImage();
             bitmap.SetSource(photoStream);
-            
-            //captureImage.Source = bitmap;
+            captureImage.Source = bitmap;
+            photoStream.Dispose();
+            */
 
-            return "Photo prise";
+            return "photo prise";
         }
-        */
-
-
-
     }
 }

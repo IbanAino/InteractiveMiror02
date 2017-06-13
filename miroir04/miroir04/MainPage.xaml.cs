@@ -41,11 +41,6 @@ namespace miroir04
         int timeCount;
         DateTime dateTime;
 
-        //webcam attributs
-        MediaCapture mediaCapture;
-        private IStorageFile photoFile;
-        private string PHOTO_FILE_NAME = "photo.jpeg";
-
         //CONSTUCTOR
         public MainPage()
         {
@@ -88,23 +83,13 @@ namespace miroir04
                     () => { checkBoxStatePhysicalButton.SetValue(CheckBox.IsCheckedProperty, true); });
                 checkBoxState = true;
 
-
-                //take a picture
-                await initWebcam();
-
-                String filePath = null;
-                
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    async () => {
-                        filePath = await TakePictureBitmap();
-                        textBlockInitWebcam.Text += filePath;
-                    });
+                await webcam.TakePicture();
 
                 //ask EmotionApi
-                await Task.Delay(10000);
-
+                await Task.Delay(1000);
+             
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequestBitmap(filePath); });
+                    async () => { textBlockEmotionApi.Text = await emotionApi.MakeRequestBitmap("Charlotte"); });                    
             }
             else
             {
@@ -112,39 +97,6 @@ namespace miroir04
                     () => { checkBoxStatePhysicalButton.SetValue(CheckBox.IsCheckedProperty, false); });
                 checkBoxState = false;
             }
-        }
-
-        //WEBCAM
-        public async Task<string> initWebcam()
-        {
-            //Video and Audio is initialized by default  
-            mediaCapture = new MediaCapture();
-            await mediaCapture.InitializeAsync();
-
-            return "webcam initialized";
-        }
-        
-        public async Task<String> TakePictureBitmap()
-        {
-            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
-                            PHOTO_FILE_NAME, CreationCollisionOption.ReplaceExisting);
-            ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
-            await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
-
-
-
-            StorageFile photo2 = await KnownFolders.PicturesLibrary.GetFileAsync("photo.jpeg");
-
-            
-            IRandomAccessStream photoStream = await photo2.OpenReadAsync();
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.SetSource(photoStream);
-            captureImage.Source = bitmap;
-
-            photoStream.Dispose();
-            
-            return "photo prise";
-        }
-        
+        }        
     }
 }
