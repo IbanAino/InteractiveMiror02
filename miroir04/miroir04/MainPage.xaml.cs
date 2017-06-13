@@ -64,14 +64,6 @@ namespace miroir04
             //subscription of classes to events
             button.buttonPressed += this.OnButtonPressed;
             button.buttonPressed += warningLight.OnButtonPressed;
-
-            // initialisation of the webcam
-            /*            
-            new Action(async () =>
-            {
-                textBlockInitWebcam.Text = await webcam.initWebcam();
-            }).Invoke();
-            */
         }
 
         //METHODS
@@ -120,42 +112,9 @@ namespace miroir04
                     () => { checkBoxStatePhysicalButton.SetValue(CheckBox.IsCheckedProperty, false); });
                 checkBoxState = false;
             }
-
-            
-
-
-            //take a picture
-            /*
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                async () => { textBlockInitWebcam.Text += " " + await webcam.TakePicture(); });
-            */
-
         }
 
         //WEBCAM
-        //called with buttons
-        private async void initVideo_Click(object sender, RoutedEventArgs e)
-        {
-            //Video and Audio is initialized by default  
-            mediaCapture = new MediaCapture();
-            await mediaCapture.InitializeAsync();
-        }
-
-        private async void takePhoto_Click(object sender, RoutedEventArgs e)
-        {
-            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
-                            PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
-            ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
-
-            await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
-
-            IRandomAccessStream photoStream = await photoFile.OpenReadAsync();
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.SetSource(photoStream);
-            captureImage.Source = bitmap;
-        }
-
-        //called with functions
         public async Task<string> initWebcam()
         {
             //Video and Audio is initialized by default  
@@ -164,34 +123,11 @@ namespace miroir04
 
             return "webcam initialized";
         }
-
-        public async Task<string> TakePicture()
-        {
-            photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
-                            PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
-            ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
-
-            await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
-
-            IRandomAccessStream photoStream = await photoFile.OpenReadAsync();
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.SetSource(photoStream);
-            captureImage.Source = bitmap;
-
-            return photoFile.Path;
-        }
-
         
-        // function 2
         public async Task<String> TakePictureBitmap()
         {
-            //delete the previus file
-            //StorageFile fDelete = await ApplicationData.Current.LocalFolder.GetFileAsync(PHOTO_FILE_NAME);
-            //await fDelete.DeleteAsync();
-
             photoFile = await KnownFolders.PicturesLibrary.CreateFileAsync(
                             PHOTO_FILE_NAME, CreationCollisionOption.ReplaceExisting);
-                            //PHOTO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
             ImageEncodingProperties imageProperties = ImageEncodingProperties.CreateJpeg();
             await mediaCapture.CapturePhotoToStorageFileAsync(imageProperties, photoFile);
 
@@ -207,8 +143,6 @@ namespace miroir04
 
             photoStream.Dispose();
             
-
-            //return photoFile.Path;
             return "photo prise";
         }
         

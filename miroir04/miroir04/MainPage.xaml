@@ -30,8 +30,5 @@
             <Image x:Name="captureImage" Width="320" Height="320" Visibility="Visible" Canvas.Left="110" Canvas.Top="-10"/>
         </Canvas>
 
-        <Button x:Name="button1" Content="initialiser video" Click="initVideo_Click" HorizontalAlignment="Left" Margin="147,848,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button2" Content="prendre photo" Click="takePhoto_Click" HorizontalAlignment="Left" Margin="304,848,0,0" VerticalAlignment="Top"/>
-
     </Grid>
 </Page>
